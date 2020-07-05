@@ -11,7 +11,7 @@ type Props = {task:ITask, toggleActive:(id:string)=>void, deleteTask:(id:string)
 
 export default function Task({task, toggleActive, deleteTask, taskComplete}:Props) {
 
-    const [timer] = useState(new Timer.default({ interval: 1 }));
+    const [timer] = useState(new Timer.default({ interval: 1000 }));
     const [totalTime, SetTotalTime] = useState<number>(0);
 
     const stars = (totalTime / 1000 / 60 / 15) | 0;
