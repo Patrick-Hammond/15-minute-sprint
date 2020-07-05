@@ -2,13 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { ITask } from '../App'
 import * as Timer from 'tiny-timer';
 import { FormatDuration } from '../utils/Formatting';
+import { Paper, IconButton } from '@material-ui/core';
+import SVGPlay from '../assets/play.svg';
+import SVGStop from '../assets/stop.svg';
+import StarCounter from './StarCounter';
 
 type Props = {task:ITask, toggleActive:(id:string)=>void, deleteTask:(id:string)=>void, taskComplete:(id:string)=>void};
 
 export default function Task({task, toggleActive, deleteTask, taskComplete}:Props) {
 
-    const [timer] = useState(new Timer.default({ interval: 1000 }));
+    const [timer] = useState(new Timer.default({ interval: 1 }));
     const [totalTime, SetTotalTime] = useState<number>(0);
+
+    const stars = (totalTime / 1000 / 60 / 15) | 0;
 
     const onTimerTick = (ms:number)=> {
         SetTotalTime(prevTotalTime => prevTotalTime + (ms > 0 ? 1000 : 0));
@@ -35,14 +41,15 @@ export default function Task({task, toggleActive, deleteTask, taskComplete}:Prop
     }
 
     return (  
-        <div className="Task">
+        <Paper className="Task" elevation={2}>
             <button className="TaskClose" onClick={()=>deleteTask(task.id)}>X</button>
             <label>{task.taskName}</label>
-            <br/>
-            <input type="checkbox" checked={task.active} onChange={()=>toggleActive(task.id)} />
-            {task.active ? "Stop" : "Start"}
-            <span className="CurrentTime"> {FormatDuration(timer.time)} </span>
+            <IconButton className="TaskControls" onClick={()=>toggleActive(task.id)}  >
+                {task.active ? <img src={SVGStop} alt="stop"/> : <img src={SVGPlay} alt="start"/>}
+            </IconButton>
+            <span className="CurrentTime"> {timer.time > 0 ? FormatDuration(timer.time) : ""} </span>
             <span className="TotalTime"> {FormatDuration(totalTime)}</span>
-        </div>
+            <StarCounter starCount={stars} />
+        </Paper>
     )
 }

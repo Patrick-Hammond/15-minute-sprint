@@ -1,8 +1,18 @@
 .App-header {
   background-color: #282c34;
-  font-size: 18px;
-  color: white;
   text-align: center;
+}
+
+.App-header span {
+  position:relative;
+  font-size: 28px;
+  color: white;
+  bottom:2px;}
+
+.App-header img {
+  position:relative;
+  right:3px;
+  top:1px;
 }
 
 .TaskList {
@@ -16,7 +26,13 @@
   border-style: solid;
   border-color: rgba(0,0,0,0.5);
   border-radius: 5px;
-  margin:5px 10% 5px 10%;
+  margin:5px 20% 5px 20%;
+  height: 50px;
+}
+
+.TaskControls {
+  position: absolute !important;
+  left:2px;
 }
 
 .TaskClose {
@@ -30,15 +46,22 @@
   font-size: 10px;
   background-color:rgb(80, 80, 80);
   color: aliceblue;
+  cursor: fin;
 }
 
 .AddTaskButton {
+  position:absolute;
   padding-top: 5px;
-  padding-left: 10px;
+  left:50%;
+  transform: translateX(-50%);
+}
+
+.AddTaskButton Button {
+  margin-left: 10px;
 }
 
 .TaskInput {
-  max-width: 300px;
+  width: 250px;
 }
 
 .StartButton {
@@ -47,10 +70,23 @@
 
 .CurrentTime {
   position: absolute;
-  left:2px;
+  left:65px;
+  bottom:2px;
 }
 
 .TotalTime {
   position: absolute;
   right:2px;
+  bottom:2px;
+}
+
+.StarCounter {
+  position: relative;
+  top:8px;
+}
+
+.StarCounter span {
+  position:relative;
+  bottom:3px;
+  font-size: 14px;
 }

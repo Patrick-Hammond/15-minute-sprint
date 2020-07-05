@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import AddTaskButton from './componenets/AddTaskButton';
 import TaskList from './componenets/TaskList';
 import useSound from 'use-sound';
+import SVGIcon from './assets/icon.svg';
 
 export interface ITask {
   id:string;
@@ -27,10 +28,13 @@ export default function App() {
   }
 
   const toggleActive = (id:string) => {
-      const task = taskList.find(task => task.id === id);
-      if(task) {
-        task.active = !task.active;
-      }
+      taskList.forEach(task => {
+        if(task.id === id){
+          task.active = !task.active;
+        } else {
+          task.active = false;
+        }
+      });
       SetTask([...taskList]);
   }
 
@@ -44,7 +48,7 @@ export default function App() {
 
   return (
       <div>
-        <div className="App-header" >TASK TIMER</div>
+        <div className="App-header" ><img src={SVGIcon} alt="logo"/><span>15 MINUTE SPRINT</span></div>
         <TaskList taskList={taskList} toggleActive={toggleActive} deleteTask={deleteTask} taskComplete={taskComplete} />
         <AddTaskButton onClick={addTask} />
       </div>

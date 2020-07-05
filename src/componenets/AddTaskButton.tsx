@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, TextField } from '@material-ui/core';
 
 type Props = {onClick:(name:string)=>void};
 
@@ -6,32 +7,33 @@ export default function AddTaskButton({onClick}:Props) {
 
   const [editing, SetEditMode] = useState(false);
   const EditClicked = () => SetEditMode(true);
-
-  let taskInputRef:HTMLInputElement | null;
+  let text = "";
  
   const OkClicked = () => {
-    if(taskInputRef && taskInputRef.value){
+    if(text !== ""){
       SetEditMode(false);
-      onClick(taskInputRef.value);
+      onClick(text);
     }
   }
+
+  
 
   return (
     <div className="AddTaskButton">
       {
         editing ?
         <div>
-          <input 
+          <TextField
             className="TaskInput"
-            placeholder="A name for this task"
+            id="standard-basic"
+            placeholder="Type a name for this task"
             autoFocus={true}
-            ref={element => taskInputRef = element}
-            type="text"
+            onChange = {e => text = e.target.value}
             />
-          <button onClick={OkClicked}>OK</button>
+          <Button variant="contained" onClick={OkClicked}>OK</Button>
         </div>
         :
-        <button onClick={EditClicked} >Add Task</button>
+        <Button variant="contained" color="primary" onClick={EditClicked} >Add Task</Button>
       }
     </div>
   );
