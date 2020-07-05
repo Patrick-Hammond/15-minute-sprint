@@ -1,0 +1,56 @@
+.App-header {
+  background-color: #282c34;
+  font-size: 18px;
+  color: white;
+  text-align: center;
+}
+
+.TaskList {
+  padding-left: 10px;
+}
+
+.Task {
+  position: relative;
+  text-align: center;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(0,0,0,0.5);
+  border-radius: 5px;
+  margin:5px 10% 5px 10%;
+}
+
+.TaskClose {
+  position: absolute;
+  top:2px;
+  right:2px;
+  border-width: 0;
+  border-radius: 2px;
+  padding:1px;
+  width: 12px;
+  font-size: 10px;
+  background-color:rgb(80, 80, 80);
+  color: aliceblue;
+}
+
+.AddTaskButton {
+  padding-top: 5px;
+  padding-left: 10px;
+}
+
+.TaskInput {
+  max-width: 300px;
+}
+
+.StartButton {
+  margin-left: 10px;
+}
+
+.CurrentTime {
+  position: absolute;
+  left:2px;
+}
+
+.TotalTime {
+  position: absolute;
+  right:2px;
+}
