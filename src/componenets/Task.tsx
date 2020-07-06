@@ -7,7 +7,7 @@ import SVGPlay from '../assets/play.svg';
 import SVGStop from '../assets/stop.svg';
 import StarCounter from './StarCounter';
 
-type Props = {task:ITask, toggleActive:(id:string)=>void, deleteTask:(id:string)=>void, taskComplete:(id:string)=>void};
+type Props = {task:ITask, toggleActive:(id:string, totalTime:number)=>void, deleteTask:(id:string)=>void, taskComplete:(id:string)=>void};
 
 export default function Task({task, toggleActive, deleteTask, taskComplete}:Props) {
 
@@ -21,13 +21,15 @@ export default function Task({task, toggleActive, deleteTask, taskComplete}:Prop
     }
 
     const onTimerComplete = ()=> {
-        toggleActive(task.id);
+        toggleActive(task.id, totalTime);
         taskComplete(task.id);
     }
 
     useEffect(()=> {
         timer.on('tick', onTimerTick);
         timer.on('done', onTimerComplete);
+
+        SetTotalTime(task.totalTime || 0);
 
         return ()=> {
             timer.off('tick', onTimerTick);
@@ -44,7 +46,7 @@ export default function Task({task, toggleActive, deleteTask, taskComplete}:Prop
         <Paper className="Task" elevation={2}>
             <button className="TaskClose" onClick={()=>deleteTask(task.id)}>X</button>
             <label>{task.taskName}</label>
-            <IconButton className="TaskControls" onClick={()=>toggleActive(task.id)}  >
+            <IconButton className="TaskControls" onClick={()=>toggleActive(task.id, totalTime)}  >
                 {task.active ? <img src={SVGStop} alt="stop"/> : <img src={SVGPlay} alt="start"/>}
             </IconButton>
             <span className="CurrentTime"> {timer.time > 0 ? FormatDuration(timer.time) : ""} </span>
