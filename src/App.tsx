@@ -20,17 +20,16 @@ export default function App() {
 
   const [playDoneSound] = useSound(process.env.PUBLIC_URL + '/ding.mp3');
 
-  const onDestroy = ()=> {
-    playDoneSound();
-    const newTaskList = [...taskList];
-    newTaskList.forEach(task => task.active = false);
-    SetTasks(newTaskList);
+  const onDestroy = (e:Event)=> {
+    e.preventDefault();
   }
 
   useEffect(() => {
     const storedTasks = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (storedTasks) SetTasks(JSON.parse(storedTasks));
-    window.addEventListener("unload", onDestroy);
+    window.addEventListener("beforeunload", onDestroy);
+
+    return ()=> window.removeEventListener("beforeunload", onDestroy);
   }, [])
 
   useEffect(() => {

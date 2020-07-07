@@ -9,12 +9,12 @@ import StarCounter from './StarCounter';
 
 type Props = {task:ITask, toggleActive:(id:string)=>void, deleteTask:(id:string)=>void, taskComplete:(id:string)=>void};
 
-const DURATION = 15 * 60 * 1000;
+const DURATION = 15 * 60 * 1000 + 1000;
 
 export default function Task({task, toggleActive, deleteTask, taskComplete}:Props) {
 
     const timer = useRef(new Timer.default({ interval: 1000 }));
-    const [currentTime, SetCurrentTime] = useState(0);
+    const [currentTime, SetCurrentTime] = useState(DURATION - 1000);
     
     let startTotal = useRef<number | undefined>(0);
 
@@ -49,7 +49,6 @@ export default function Task({task, toggleActive, deleteTask, taskComplete}:Prop
         }
     } else if(timer.current.status === "stopped"){
         timer.current.start(DURATION);
-        onTimerTick(DURATION);
     }
 
     return (  
