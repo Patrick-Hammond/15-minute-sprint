@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { ITask } from '../App'
 import * as Timer from 'tiny-timer';
 import { FormatDuration } from '../utils/Formatting';
@@ -7,50 +7,56 @@ import SVGPlay from '../assets/play.svg';
 import SVGStop from '../assets/stop.svg';
 import StarCounter from './StarCounter';
 
-type Props = {task:ITask, toggleActive:(id:string, totalTime:number)=>void, deleteTask:(id:string)=>void, taskComplete:(id:string)=>void};
+type Props = {task:ITask, toggleActive:(id:string)=>void, deleteTask:(id:string)=>void, taskComplete:(id:string)=>void};
+
+const DURATION = 15 * 60 * 1000;
 
 export default function Task({task, toggleActive, deleteTask, taskComplete}:Props) {
 
-    const [timer] = useState(new Timer.default({ interval: 1000 }));
-    const [totalTime, SetTotalTime] = useState<number>(0);
+    const timer = useRef(new Timer.default({ interval: 1000 }));
+    const [currentTime, SetCurrentTime] = useState(0);
+    
+    let startTotal = useRef<number | undefined>(0);
 
-    const stars = (totalTime / 1000 / 60 / 15) | 0;
+    const stars = (task.totalTime / DURATION) | 0;
 
     const onTimerTick = (ms:number)=> {
-        SetTotalTime(prevTotalTime => prevTotalTime + (ms > 0 ? 1000 : 0));
+        task.totalTime = (startTotal.current || 0) + DURATION - timer.current.time;
+        SetCurrentTime(ms);
     }
 
     const onTimerComplete = ()=> {
-        toggleActive(task.id, totalTime);
+        toggleActive(task.id);
         taskComplete(task.id);
     }
 
     useEffect(()=> {
-        timer.on('tick', onTimerTick);
-        timer.on('done', onTimerComplete);
+        timer.current.on('tick', onTimerTick);
+        timer.current.on('done', onTimerComplete);
 
-        SetTotalTime(task.totalTime || 0);
+        task.totalTime = task.totalTime || 0;
 
         return ()=> {
-            timer.off('tick', onTimerTick);
+            timer.current.off('tick', onTimerTick);
         }
     },[])
 
     if(!task.active){
-        timer.stop();
-    } else if(timer.status === "stopped"){
-        timer.start(15 * 60 * 1000);
+        timer.current.stop();
+    } else if(timer.current.status === "stopped"){
+        timer.current.start(DURATION);
+        startTotal.current = task.totalTime;
     }
 
     return (  
         <Paper className="Task" elevation={2}>
             <button className="TaskClose" onClick={()=>deleteTask(task.id)}>X</button>
             <label>{task.taskName}</label>
-            <IconButton className="TaskControls" onClick={()=>toggleActive(task.id, totalTime)}  >
+            <IconButton className="TaskControls" onClick={()=>toggleActive(task.id)}  >
                 {task.active ? <img src={SVGStop} alt="stop"/> : <img src={SVGPlay} alt="start"/>}
             </IconButton>
-            <span className="CurrentTime"> {timer.time > 0 ? FormatDuration(timer.time) : ""} </span>
-            <span className="TotalTime"> {FormatDuration(totalTime)}</span>
+            <span className="CurrentTime"> {currentTime > 0 ? FormatDuration(currentTime) : ""} </span>
+            <span className="TotalTime"> {FormatDuration(task.totalTime)}</span>
             <StarCounter starCount={stars} />
         </Paper>
     )

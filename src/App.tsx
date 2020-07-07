@@ -10,7 +10,7 @@ export interface ITask {
   id:string;
   taskName:string;
   active:boolean;
-  totalTime?:number;
+  totalTime:number;
 }
 
 const LOCAL_STORAGE_KEY = 'symbolshift.15minutesprint'
@@ -36,19 +36,19 @@ export default function App() {
       active:false,
       totalTime:0
     };
-    SetTasks(prevTasklist => [...prevTasklist, newTask]);
+    SetTasks([...taskList, newTask]);
   }
 
-  const toggleActive = (id:string, totalTime:number) => {
-      taskList.forEach(task => {
+  const toggleActive = (id:string) => {
+      const newTaskList = [...taskList];
+      newTaskList.forEach(task => {
         if(task.id === id){
           task.active = !task.active;
-          task.totalTime = totalTime;
         } else {
           task.active = false;
         }
       });
-      SetTasks([...taskList]);
+      SetTasks(newTaskList);
   }
 
   const taskComplete = (id:string) => {
